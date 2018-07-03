@@ -37,9 +37,12 @@ class Main extends Component {
                 }
             })
             .then(res => {
+                let count = 0;
                 for (let i in res) {
                     this.setOutputVal(this.state.outputVal + i + " - " + res[i] + "\n");
+                    count++;
                 }
+                this.setOutputVal(this.state.outputVal + "\n" + "Unique: " + count);
         })
             .catch(error => {
                 console.log(error);
