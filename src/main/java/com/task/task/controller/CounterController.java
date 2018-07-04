@@ -1,31 +1,39 @@
 package com.task.task.controller;
 
 import com.task.task.entity.Body;
-import org.springframework.http.HttpStatus;
+import com.task.task.service.CounterService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.HashMap;
+
+import javax.validation.Valid;
 import java.util.Map;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 public class CounterController {
+    private final CounterService counterService;
+
+    @Autowired
+    public CounterController(CounterService counterService) {
+        this.counterService = counterService;
+    }
 
     @RequestMapping(
             value = "/count",
             method = RequestMethod.POST,
-            produces="application/json")
+            produces = { APPLICATION_JSON_VALUE },
+            consumes = { APPLICATION_JSON_VALUE })
     @CrossOrigin(origins = "*")
-    public ResponseEntity<Map<String, Integer>> count(@RequestBody Body body){
+    public ResponseEntity<?> count(@Valid @RequestBody Body body){
         try {
-            Map<String, Integer> words = new HashMap<>();
-            body.getData().forEach(word -> {
-                Integer count = words.get(word);
-                words.put(word, (count == null) ? 1 : count + 1);
-            });
-            return new ResponseEntity<>(words, HttpStatus.OK);
+            Map<String, Long> words = counterService.countWordsEntries(body.getData());
+            return new ResponseEntity<>(words, OK);
         } catch (Exception ex) {
-            //change "Return some error code in case of any issues with a request."
-            return new ResponseEntity<>(new HashMap<>(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Bad input data", BAD_REQUEST);
         }
     }
 }

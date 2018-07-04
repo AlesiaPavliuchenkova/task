@@ -26,14 +26,13 @@ class Main extends Component {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({data: this.splitText()})
+            body: JSON.stringify({ data: this.splitText() })
         })
             .then(res => {
                 if (res.ok) {
                     return res.json()
                 } else {
-                    console.log(res);
-                    throw new Error(res);
+                    throw res;
                 }
             })
             .then(res => {
@@ -42,17 +41,15 @@ class Main extends Component {
                     this.setOutputVal(this.state.outputVal + i + " - " + res[i] + "\n");
                     count++;
                 }
-                this.setOutputVal(this.state.outputVal + "\n" + "Unique: " + count);
+                this.setOutputVal(this.state.outputVal + "\nUnique: " + count);
         })
-            .catch(error => {
-                console.log(error);
-                this.setErrorMessage(error.toString());
-            });
+            .catch(error => error.text()
+                .then(errorMessage => this.setErrorMessage(JSON.parse(errorMessage).errors[0].defaultMessage)));
     };
 
     splitText = function() {
-        let text = this.state.inputVal;
-        return text.split(' ');
+        let text = this.state.inputVal.trim(' ').replace(/\n/g, ' ');
+        return text.length === 0 ? [] : text.split(' ');
     };
 
     setInputVal = function(evt) {
