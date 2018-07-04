@@ -23,14 +23,9 @@ class Main extends Component {
         const url = "http://localhost:8080/count";
         fetch(url,
             {
-                mode: 'no-cors',
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin':'http://localhost:8080',
-                    'Access-Control-Allow-Methods': 'GET, POST',
-                    'Access-Control-Allow-Headers': 'User-Agent,Keep-Alive,Content-Type',
-                    'Access-Control-Expose-Headers': 'Content-Length,Content-Range'
+                    'Content-Type': 'application/json'
             },
             body: JSON.stringify({ data: this.splitText() })
         })
@@ -50,7 +45,9 @@ class Main extends Component {
                 this.setOutputVal(this.state.outputVal + "\nUnique: " + count);
         })
             .catch(error => error.text()
-                .then(errorMessage => this.setErrorMessage(errorMessage)));
+                .then(errorMessage => {
+                    this.setErrorMessage(JSON.parse(errorMessage).errors[0].defaultMessage);
+                }));
     };
 
     splitText = function() {
