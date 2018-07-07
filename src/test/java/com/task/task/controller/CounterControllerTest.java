@@ -53,7 +53,7 @@ public class CounterControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         Map<String, Long> resultWords = TestUtil.getCollectionObjects(result);
-        assertTrue(expectedWords.equals(resultWords));
+        assertTrue(resultWords.equals(expectedWords));
         verify(counterService, times(1)).countWordsEntries(wordsList);
     }
 
