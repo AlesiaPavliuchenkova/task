@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../css/App.css';
+import '../../css/App.css';
 
 class Main extends Component {
     constructor() {
@@ -26,10 +26,9 @@ class Main extends Component {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ data: this.splitText() })
-        })
-            .then(res => {
+                },
+                body: JSON.stringify({ data: this.splitText() })
+            }).then(res => {
                 if (res.ok) {
                     return res.json()
                 } else {
